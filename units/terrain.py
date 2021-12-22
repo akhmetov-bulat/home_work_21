@@ -1,20 +1,16 @@
 from units.game_over import GameOver, Escaped
-from units.unit import Unit
+from units.unit import Unit, Ghost
 
 
 class Terrain:
-    def __init__(self, terrain, is_walkable):
-        self.is_walkable = is_walkable
-        self.terrain = terrain
-
-    def __repr__(self):
-        return "Terrain"
+    def __init__(self):
+        self.name = self.__class__.__name__.capitalize()
 
     def is_walkable(self):
-        return self.is_walkable()
+        return self.is_walkable
 
     def terrain(self):
-        return self.terrain()
+        return self.name
 
     def step_on(self, unit: Unit):
         return True
@@ -22,39 +18,29 @@ class Terrain:
 
 class Door(Terrain):
     def __init__(self):
-        super().__init__(terrain="door", is_walkable=False)
+        super().__init__()
 
-    def __repr__(self):
-        return '🗄️'
-
-    def step_on(self, unit: Unit):
-        if unit.has_key:
-            self.is_walkable = True
+    def step_on(self, unit: Ghost):
+        if unit.has_key():
             raise Escaped("You escaped")
         return False
 
 
 class Key(Terrain):
     def __init__(self):
-        super().__init__(terrain="key", is_walkable=True)
+        super().__init__()
 
-    def __repr__(self):
-        return '🔑'
-
-    def step_on(self, unit: Unit):
-        unit.got_key = True
+    def step_on(self, unit: Ghost):
+        unit.set_key()
         return True
 
 
 class Trap(Terrain):
     def __init__(self, damage=30):
-        super().__init__(terrain="Trap", is_walkable=True)
+        super().__init__()
         self.damage = damage
 
-    def __repr__(self):
-        return '💀'
-
-    def step_on(self, unit: Unit):
+    def step_on(self, unit: Ghost):
         if self.damage >= unit.hp:
             unit.hp = 0
             raise GameOver("Game Over")
@@ -65,18 +51,12 @@ class Trap(Terrain):
 
 class Grass(Terrain):
     def __init__(self):
-        super().__init__(terrain="grass", is_walkable=True)
-
-    def __repr__(self):
-        return '❎'
+        super().__init__()
 
 
 class Wall(Terrain):
     def __init__(self):
-        super().__init__(terrain="wall", is_walkable=False)
+        super().__init__()
 
-    def __repr__(self):
-        return '🐍'
-
-    def step_on(self, unit: Unit):
+    def step_on(self, unit: Ghost):
         return False

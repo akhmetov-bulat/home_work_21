@@ -1,12 +1,24 @@
 class Unit:
-    def __init__(self):
-        self.hp = 0
-        self.got_key = False
-        self.coord = (0, 0)
-        self.escaped = False
+    def __init__(self, coord=(1, 1), hp=50):
+        self.hp = hp
+        self.coord = coord
+        self.name = self.__class__.__name__.capitalize()
 
-    def __repr__(self):
-        return "Unit"
+    def set_coord(self, x, y):
+        self.coord = tuple((x, y))
+
+    def get_coordinates(self):
+        return self.coord
+
+    def has_position(self, x, y):
+        return (x, y) == self.coord
+
+
+class Ghost(Unit):
+    def __init__(self):
+        super().__init__()
+        self.got_key = False
+        self.escaped = False
 
     def has_key(self):
         return self.got_key
@@ -22,23 +34,3 @@ class Unit:
 
     def get_damage(self, damage):
         self.hp = self.hp - damage
-
-    def set_coordinates(self, x, y):
-        self.coord = (x, y)
-
-    def get_coordinates(self):
-        return self.coord
-
-    def has_position(self, x, y):
-        return (x, y) == self.coord
-
-
-class Ghost(Unit):
-    def __init__(self, coord=(1,1), hp=50):
-        super().__init__()
-        self.name = "Ghost"
-        self.hp = hp
-        self.coord = coord
-
-    def __repr__(self):
-        return '👻'
