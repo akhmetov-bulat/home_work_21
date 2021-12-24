@@ -2,6 +2,8 @@ class Unit:
     def __init__(self, coord=(1, 1), hp=50):
         self.hp = hp
         self.coord = coord
+        self.got_key = False
+        self.escaped = False
         self.name = self.__class__.__name__.capitalize()
 
     def set_coord(self, x, y):
@@ -12,13 +14,6 @@ class Unit:
 
     def has_position(self, x, y):
         return (x, y) == self.coord
-
-
-class Ghost(Unit):
-    def __init__(self):
-        super().__init__()
-        self.got_key = False
-        self.escaped = False
 
     def has_key(self):
         return self.got_key
@@ -31,6 +26,9 @@ class Ghost(Unit):
 
     def is_alive(self):
         return self.hp > 0
+
+
+class Ghost(Unit):
 
     def get_damage(self, damage):
         self.hp = self.hp - damage
